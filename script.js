@@ -7,6 +7,8 @@ function HangmanGame() {
 	// Set current phrase.
 	this.currentPhrase = "";
 
+	this.solvedIndices = [];
+
 	this.incorrectGuesses = 0;
 
 	this.printSpaces = function(string, arrayIndicesToPrint) {
@@ -19,7 +21,8 @@ function HangmanGame() {
 		}
 
 		// Check for array of indices to print.
-		// Very important NOTE!!! typeof ["hey"] returns "object" because arrays are a type of JS object... <_<
+		// Very important NOTE!!! typeof ["I", "am", "an", "array!"]
+		// returns "object" because arrays are a type of JS object... <_<
 		if (typeof arrayIndicesToPrint === "object") {
 			var hasArray = true;
 		} else {
@@ -30,31 +33,16 @@ function HangmanGame() {
 		$(".phrase-container").html("");
 
 
-		// // Split phrase into separate words. This isn't as versatile as doing it character by character..
-		// var splitPhrase = string.split(" ");
-		// var numWords = splitPhrase.length;
-
-
-		// // Print underscores to page.
-		// for (let k = 0; k < numWords; k++) {
-		// 	var numLetters = splitPhrase[k].length;
-
-		// 	$(".phrase-container").append("_ ".repeat(numLetters));
-		// 	$(".phrase-container").append("<br>");
-
-		// }
-
-		// Split phrase character by character.
+		// Decompose phrase into array of constituent characters.
 		var charArray = string.split("");
 
-		// Iterate through each character, printing to page.
+		// Iterate through each character, printing either a space, letter, or underscore to page.
 		for (let k = 0; k < charArray.length; k++) {
 
 			// Print line break for space in phrase.
 			if (charArray[k] === " ") {
 
 				$(".phrase-container").append("<br>");
-				console.log("added line break");
 
 
 			// Check for solved characters and print their values.
@@ -64,15 +52,12 @@ function HangmanGame() {
 
 					if (this.arrayContains(arrayIndicesToPrint, k)) {
 
-						$(".phrase-container").append(charArray[k]);
-						// console.log("added character");
+						$(".phrase-container").append(charArray[k] + " ");
 
 					} else {
 
 						// Print underscore for unknown letter.
-						$(".phrase-container").append("_ ");
-
-						// console.log("added underscore");						
+						$(".phrase-container").append("_ ");					
 					}
 
 				} else {
@@ -80,7 +65,6 @@ function HangmanGame() {
 					// Print underscore for unknown letter.
 					$(".phrase-container").append("_ ");
 
-					// console.log("added underscore");
 				}
 			}
 		}
@@ -98,8 +82,7 @@ function HangmanGame() {
 		var charArray = this.currentPhrase.split("");
 		
 		var matchedLetter = false;
-		var indicesToReplace = [];
-
+	
 
 		// Check for any matches to the guessed letter
 		for (let k = 0; k < charArray.length; k++) {
@@ -108,7 +91,7 @@ function HangmanGame() {
 
 				// Make that letter appear on the screen?
 				// Nah, add that index to indices to replace.
-				indicesToReplace.push(k)
+				this.solvedIndices.push(k)
 
 				matchedLetter = true;
 			}
@@ -118,8 +101,8 @@ function HangmanGame() {
 		if (matchedLetter) {
 
 			// Add the letter to each letter to replace
-			console.log(indicesToReplace);
-			this.printSpaces(this.currentPhrase, indicesToReplace);
+			console.log(this.solvedIndices);
+			this.printSpaces(this.currentPhrase, this.solvedIndices);
 
 		} else {
 
