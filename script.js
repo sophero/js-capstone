@@ -1,33 +1,58 @@
 
 
-function makePhrase(string) {
-	var phrase = string.toUpperCase();
-	var splitPhrase = phrase.split(" ");
-	var numWords = splitPhrase.length;
+// function makePhrase(string) {
+// 	var phrase = string.toUpperCase();
+// 	var splitPhrase = phrase.split(" ");
+// 	var numWords = splitPhrase.length;
 
-	for (let k = 0; k  < numWords; k++) {
-	$(".phrase-container").html()
+// 	for (let k = 0; k  < numWords; k++) {
+// 	$(".phrase-container").html()
 
-		// splitPhrase[k].length
+// 		// splitPhrase[k].length
+
+// 	}
+
+// 	// Send to another function to print the empty spaces?
+// }
+
+function Hangman() {
+
+	// Take an argument in the form of an array containing strings for use in the game.
+
+	// Set default phrase.
+	this.phrase = "";
+
+	this.printSpaces = function(string) {
+
+		// Check for only letters and spaces in the string.
+		var letters = /^[a-zA-Z\s]+$/;
+		if (!letters.test(string)) {
+			alert("Phrase contains invalid characters - letters and spaces only please.");
+		}
+
+		// Reset phrase container on page.
+		$(".phrase-container").html("");
+
+		// Split phrase into separate words.
+		var splitPhrase = string.split(" ");
+		var numWords = splitPhrase.length;
+
+		for (let k = 0; k < numWords; k++) {
+			var numLetters = splitPhrase[k].length;
+
+			$(".phrase-container").append("_ ".repeat(numLetters));
+			$(".phrase-container").append("<br>");
+
+		}
+
+		this.phrase = string.toUpperCase();
+	}
+
+
+	function searchLetter(letter) {
 
 	}
 
-	// Send to another function to print the empty spaces?
 }
 
-function printSpaces(string) {
-	var splitPhrase = string.split(" ");
-	var numWords = splitPhrase.length;
-
-	// var newImgTag = $("<img>");
-	// newImgTag.attr("src", "images/horizontal_line-512.png");
-		
-	for (let k = 0; k < numWords; k++) {
-		var numLetters = splitPhrase[k].length;
-		// var newSpaces = newImgTag * splitPhrase[k].length;
-		// console.log("_".repeat(numLetters));
-		$(".phrase-container").append("_ ".repeat(numLetters));
-		$(".phrase-container").append("<br>");
-
-	}
-}
+var hangman = new Hangman();
