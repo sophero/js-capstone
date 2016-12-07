@@ -110,6 +110,8 @@ function HangmanGame() {
 			// Set up a hangman dude. Incorrect guesses += 1
 			this.incorrectGuesses++;
 
+			$(".num-incorrect").html(this.incorrectGuesses);
+
 			return "Not a match!"
 
 		}
