@@ -1,8 +1,11 @@
+body {
+  font-family: Verdana; }
+
 img {
   display: inline-block;
   width: 10vw; }
 
 .phrase-container {
-  font-size: 5em; }
+  font-size: 4em; }
 
 /*# sourceMappingURL=styles.css.map */
