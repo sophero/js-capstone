@@ -1,21 +1,37 @@
 // To do:
-// Add word input / phrase input functionality - separate box?
+
 // Add congratulations and death messages
 // Add cookie being eaten or some image sequence with incorrect guesses
 // Make incorrect letters look presentable
 // Make whole page presentable
+
 // Add library of words, with hints?
 // Add functionality for loading random word, cycling to another etc.
 // 	this.loadNewPhrase = function() {}
 // 	this.phrases = [];
-// If the phrase is only one word, make it so that guess a word disappears 
-// 	and the placeholder text in guess the phrase becomes guess the word!
+
 // Fix variable names i.e. charArray, printSpaces
 // Add instructions to page for how to play game
 
-function HangmanGame() {
+// Can still submit non-letter guesses.
+// Keep track of submitted letters and stop user from submitting the same letter.
+
+var phraseLibrary = [
+	"Borborygmus",
+	"system of a down",
+	"New Zealand"
+]
+
+function HangmanGame(phraseLibrary) {
 
 	// Take an argument in the form of an array containing strings for use in the game.
+	if (typeof phraseLibrary === "object") {
+
+		this.phraseLibrary = phraseLibrary;
+
+	} else {
+		this.phraseLibrary = [];
+	}
 
 	// Set current phrase.
 	this.currentPhrase = "";
@@ -27,6 +43,27 @@ function HangmanGame() {
 	this.incorrectLetters = [];
 	// this.incorrectWords = [];
 	this.incorrectPhrases = [];
+
+	this.loadPhraseFromLibrary = function() {
+		var phraseLib = this.phraseLibrary;
+
+		// Stop method pulling out the same phrase as last time	
+		do {
+			var randInt = Math.floor(Math.random() * phraseLib.length);
+			console.log(randInt);
+		}
+		while (phraseLib[randInt].toUpperCase() === this.currentPhrase) 
+
+		// It works!!!! I had forgotten .toUpperCase() ..... oh dear.
+		// The reason I went for do/while here as opposed to simply a while loop
+		// (both work) was so I wouldn't have to define randInt before the while loop
+		// and then again in the while loop. Using do saves a duplicate line of code, apparently,
+		// 'cause it does the thing at least once before checking the while loop?
+
+		this.currentPhrase = phraseLib[randInt];
+		this.printSpaces(this.currentPhrase);		
+
+	}
 
 	this.printSpaces = function(string, arrayIndicesToPrint) {
 
@@ -41,7 +78,7 @@ function HangmanGame() {
 			$(".incorrect-letters").html("");
 			// $(".incorrect-words").html("");
 			$(".incorrect-phrases").html("");
-			$(".num-incorrect").html("");
+			$(".num-incorrect").html(this.numIncorrectGuesses);
 		}
 
 		// Check for only letters and spaces in the string.
@@ -69,7 +106,7 @@ function HangmanGame() {
 		// Again, no need to split into an array. String should work just fine.
 		// var charArray = string.split("");
 		var charArray = string;
-
+		console.log(charArray);
 		// Iterate through each character, printing either a space, letter, or underscore to page.
 		for (let k = 0; k < charArray.length; k++) {
 
@@ -153,8 +190,8 @@ function HangmanGame() {
 
 
 			}
-			$(".incorrect-letters").html(this.incorrectLetters);
-			$(".num-incorrect").html(this.numIncorrectGuesses);
+			$(".incorrect-letters").html(this.incorrectLetters.toString());
+			$(".num-incorrect").html(this.numIncorrectGuesses.toString());
 
 			return "Not a match!"
 
@@ -249,8 +286,8 @@ function HangmanGame() {
 
 			this.incorrectPhrases.push(phrase);
 
-			$(".num-incorrect").html(this.numIncorrectGuesses);
-			$(".incorrect-phrases").html(this.incorrectPhrases);
+			$(".num-incorrect").html(this.numIncorrectGuesses.toString());
+			$(".incorrect-phrases").html(this.incorrectPhrases.toString());
 
 		}
 
@@ -262,16 +299,16 @@ function HangmanGame() {
 
 
 // Instantiate the game 
-var hangman = new HangmanGame();
+var hangman = new HangmanGame(phraseLibrary);
 
 function initializeListeners(obj) {
 
 	$(".guess-letter-button").on("click", function() {
 
-		if (obj.currentPhrase === "") {
+		// if (obj.currentPhrase === "") {
 
-			// Load a new phrase and run
-		}
+		// 	// Load a new phrase and run
+		// }
 		obj.searchLetter($("#letter-input").val());
 	});
 
@@ -279,10 +316,10 @@ function initializeListeners(obj) {
 
 		// Same code as above... tried to write a function in HangmanGame constructor
 		// but it causes trouble using this.. not sure why.
-		if (obj.currentPhrase === "") {
+		// if (obj.currentPhrase === "") {
 
-			// Load a new phrase and run
-		}
+		// 	// Load a new phrase and run
+		// }
 		obj.searchLetter($("#letter-input").val());
 
 		// Return false stops the page from reloading.
@@ -309,6 +346,10 @@ function initializeListeners(obj) {
 	$("#guess-phrase-form").submit(function() {
 		obj.matchPhrase($("#phrase-input").val());
 		return false;
+	});
+
+	$(".load-phrase-button").on("click", function() {
+		obj.loadPhraseFromLibrary();
 	})
 
 }

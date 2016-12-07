@@ -11,9 +11,13 @@
 </head>
 <body>
 
+	<button class="load-phrase-button">Load new phrase!</button>
+
+
 	<div class="phrase-container">
 
 	</div>
+
 
 	<div>
 		<form id="guess-letter-form">
@@ -21,14 +25,6 @@
 			<input type="button" name="guess-letter-button" value="Go" class="guess-letter-button">
 		</form>
 	</div>
-<!-- 
-	<div>
-		<form id="guess-word-form">
-			<input type="text" placeholder="Guess a word" name="word-input" id="word-input">
-			<input type="button" name="guess-word-button" value="Go" class="guess-word-button">
-		</form>
-	</div> -->
-
 
 	<div>
 		<form id="guess-phrase-form">
@@ -39,8 +35,9 @@
 
 	<div class="incorrect-attempts">
 		<p>
-			Incorrect guesses:
-			<span class="num-incorrect"></span>
+			You have made 
+			<span class="num-incorrect">0</span>
+			 incorrect guesses.
 		</p>
 		<p>
 			Incorrect letters:
