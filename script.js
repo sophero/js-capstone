@@ -9,15 +9,21 @@ function HangmanGame() {
 
 	this.solvedIndices = [];
 
-	this.incorrectGuesses = 0;
+	this.numIncorrectGuesses = 0;
+
+	this.incorrectLetters = [];
 
 	this.printSpaces = function(string, arrayIndicesToPrint) {
 
 		// Check if this is a new string and reset solved indices if it is.
 		if (string !== this.currentPhrase) {
-
 			this.solvedIndices = [];
-			
+			this.numIncorrectGuesses = 0;
+			this.incorrectLetters = [];
+
+			$(".incorrect-letters").html(this.incorrectLetters);
+
+			$(".num-incorrect").html(this.numIncorrectGuesses);
 		}
 
 		// Check for only letters and spaces in the string.
@@ -37,12 +43,14 @@ function HangmanGame() {
 			var hasArray = false;
 		}
 
+
 		// Reset phrase container on page.
 		$(".phrase-container").html("");
 
-
 		// Decompose phrase into array of constituent characters.
-		var charArray = string.split("");
+		// Again, no need to split into an array. String should work just fine.
+		// var charArray = string.split("");
+		var charArray = string;
 
 		// Iterate through each character, printing either a space, letter, or underscore to page.
 		for (let k = 0; k < charArray.length; k++) {
@@ -87,7 +95,10 @@ function HangmanGame() {
 	this.searchLetter = function(letter) {
 
 		var er = letter.toUpperCase();
-		var charArray = this.currentPhrase.split("");
+
+		// There's really no need to split the phrase into an array...same methods exist on strings.
+		// var charArray = this.currentPhrase.split("");
+		var charArray = this.currentPhrase;
 		
 		var matchedLetter = false;
 		$("#guess-input")[0].value = "";
@@ -114,10 +125,14 @@ function HangmanGame() {
 
 		} else {
 
-			// Set up a hangman dude. Incorrect guesses += 1
-			this.incorrectGuesses++;
+			this.numIncorrectGuesses++;
+			this.incorrectLetters.push(letter);
 
-			$(".num-incorrect").html(this.incorrectGuesses);
+			// Set up a hangman dude. Incorrect guesses += 1
+
+			$(".incorrect-letters").html(this.incorrectLetters);
+
+			$(".num-incorrect").html(this.numIncorrectGuesses);
 
 			return "Not a match!"
 
