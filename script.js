@@ -83,7 +83,7 @@ function HangmanGame() {
 		var charArray = this.currentPhrase.split("");
 		
 		var matchedLetter = false;
-	
+		$("#guess-input")[0].value = "";
 
 		// Check for any matches to the guessed letter
 		for (let k = 0; k < charArray.length; k++) {
@@ -146,10 +146,23 @@ function initializeListeners(obj) {
 
 			// Load a new phrase and run
 		}
-		// console.log($("#guess-input")[0].value);
+		obj.searchLetter($("#guess-input")[0].value);
+	});
+
+	$("#guess-input-form").submit(function() {
+
+		// Same code as above... tried to write a function in HangmanGame constructor
+		// but it causes trouble using this.. not sure why.
+		if (obj.currentPhrase === "") {
+
+			// Load a new phrase and run
+		}
 		obj.searchLetter($("#guess-input")[0].value);
 
+		// Return false stops the page from reloading.
+		return false;
 	});
+
 }
 
 initializeListeners(hangman);
