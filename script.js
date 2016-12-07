@@ -18,6 +18,7 @@ function HangmanGame() {
 
 		if (!letters.test(string)) {
 			alert("Phrase contains invalid characters - letters and spaces only please.");
+			return
 		}
 
 		// Check for array of indices to print.
@@ -129,6 +130,26 @@ function HangmanGame() {
 		return false;
 	}
 
+
 }
 
+
+
+// Instantiate the game 
 var hangman = new HangmanGame();
+
+function initializeListeners(obj) {
+
+	$(".guess-button").on("click", function() {
+
+		if (obj.currentPhrase === "") {
+
+			// Load a new phrase and run
+		}
+		// console.log($("#guess-input")[0].value);
+		obj.searchLetter($("#guess-input")[0].value);
+
+	});
+}
+
+initializeListeners(hangman);
