@@ -13,6 +13,13 @@ function HangmanGame() {
 
 	this.printSpaces = function(string, arrayIndicesToPrint) {
 
+		// Check if this is a new string and reset solved indices if it is.
+		if (string !== this.currentPhrase) {
+
+			this.solvedIndices = [];
+			
+		}
+
 		// Check for only letters and spaces in the string.
 		var letters = /^[a-zA-Z\s]+$/;
 
