@@ -1,15 +1,12 @@
 // To do:
 
 // Add congratulations and death messages
+
 // Add cookie being eaten or some image sequence with incorrect guesses
 
 // Make whole page presentable
 
 // Add to word/phrase library!
-
-// Add instructions to page for how to play game
-
-// Can still submit non-letter guesses.
 
 // Keep track of submitted letters and stop user from submitting the same letter?
 
@@ -142,8 +139,22 @@ function HangmanGame(phraseLibrary) {
 
 		// Check only a single letter
 		if (letter.length > 1) {
-			alert("One letter at a time please!")
+			alert("One letter at a time please!");
+			return;
 		}
+
+		// Don't allow non-letter input.
+		var letters = /^[a-zA-Z]*$/
+		if (letters.test(letter) === false) {
+			alert("That's not a letter!");
+			return;
+		}
+
+		// Also stop empty guesses.
+		if (letter === "") {
+			return;
+		}
+
 		var er = letter.toUpperCase();
 
 		// There's really no need to split the phrase into an array...same methods exist on strings.
@@ -166,6 +177,9 @@ function HangmanGame(phraseLibrary) {
 
 		if (matchedLetter) {
 
+			// Check if all non-space indices are solved..
+
+
 			// Call printPhrase with new list of solved indices.
 			console.log(this.solvedIndices);
 			this.printPhrase(this.currentPhrase, this.solvedIndices);
@@ -173,12 +187,16 @@ function HangmanGame(phraseLibrary) {
 		} else {
 
 			this.numIncorrectGuesses++;
-			this.incorrectLetters.push(letter);
+			this.incorrectLetters.push(letter.toUpperCase());
 
 			// Set up a hangman sequence.
 
 			$(".incorrect-letters").html(this.incorrectLetters.toString());
 			$(".num-incorrect").html(this.numIncorrectGuesses.toString());
+
+			if (this.numIncorrectGuesses >= 9) {
+				this.gameOver();
+			}
 
 			return "Not a match!"
 
@@ -194,12 +212,14 @@ function HangmanGame(phraseLibrary) {
 		if (phrase === this.currentPhrase) {
 
 			// Congratulations!!
+			this.congratulations();
 
+			// Unoptimized way to display entire phrase.
 			for (let k = 0; k < this.currentPhrase.length; k++) {
 				this.solvedIndices.push(k);
 			}
-
 			this.printPhrase(this.currentPhrase, this.solvedIndices);
+
 
 		} else {
 
@@ -210,6 +230,9 @@ function HangmanGame(phraseLibrary) {
 			$(".num-incorrect").html(this.numIncorrectGuesses.toString());
 			$(".incorrect-phrases").html(this.incorrectPhrases.toString());
 
+			if (this.numIncorrectGuesses >= 9) {
+				this.gameOver();
+			}
 		}
 
 	}
@@ -228,6 +251,14 @@ function HangmanGame(phraseLibrary) {
 		return false;
 	}
 
+	this.gameOver = function() {
+		$("h1").html("Game over.");
+	}
+
+	this.congratulations = function() {
+		$("h1").html("Congratulations!");		
+	}
+
 
 }
 
@@ -244,12 +275,14 @@ function initializeListeners(obj) {
 
 	$(".load-phrase-button").on("click", function() {
 		obj.loadPhraseFromLibrary();
+		$("h1").html("Hangman");
 		$(".incorrect-attempts").show();
 	});
 
 	$(".use-custom-phrase").on("click", function() {
 		var userInput = prompt("Enter the word or phrase to play.")
 		obj.printPhrase(userInput);
+		$("h1").html("Hangman");
 		$(".incorrect-attempts").show();
 	});
 

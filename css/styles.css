@@ -1,12 +1,17 @@
 body {
   font-family: Verdana; }
 
+h1 {
+  font-family: Georgia;
+  text-align: center; }
+
 img {
   display: inline-block;
   width: 10vw; }
 
 .begin-game-buttons {
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  text-align: center; }
 
 .phrase-container {
   font-size: 4em;
