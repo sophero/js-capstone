@@ -5,7 +5,11 @@ img {
   display: inline-block;
   width: 10vw; }
 
+.begin-game-buttons {
+  margin-bottom: 20px; }
+
 .phrase-container {
-  font-size: 4em; }
+  font-size: 4em;
+  margin-bottom: 20px; }
 
 /*# sourceMappingURL=styles.css.map */

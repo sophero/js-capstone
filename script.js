@@ -1,7 +1,5 @@
 // To do:
 
-// Add option to use custom phrase
-
 // Add congratulations and death messages
 // Add cookie being eaten or some image sequence with incorrect guesses
 
@@ -18,7 +16,9 @@
 var phraseLibrary = [
 	"Borborygmus",
 	"system of a down",
-	"New Zealand"
+	"New Zealand", 
+	"rhythm",
+	"acquiesce",
 ]
 
 function HangmanGame(phraseLibrary) {
@@ -38,9 +38,7 @@ function HangmanGame(phraseLibrary) {
 	this.solvedIndices = [];
 
 	this.numIncorrectGuesses = 0;
-
 	this.incorrectLetters = [];
-	// this.incorrectWords = [];
 	this.incorrectPhrases = [];
 
 	this.loadPhraseFromLibrary = function() {
@@ -69,11 +67,9 @@ function HangmanGame(phraseLibrary) {
 			this.solvedIndices = [];
 			this.numIncorrectGuesses = 0;
 			this.incorrectLetters = [];
-			// this.incorrectWords = [];
 			this.incorrectPhrases = [];
 
 			$(".incorrect-letters").html("");
-			// $(".incorrect-words").html("");
 			$(".incorrect-phrases").html("");
 			$(".num-incorrect").html(this.numIncorrectGuesses);
 		}
@@ -140,13 +136,13 @@ function HangmanGame(phraseLibrary) {
 	}
 
 
-	this.searchLetter = function(letter) {
+	this.matchLetter = function(letter) {
 		// Reset input field
 		$("#letter-input").val("");
 
 		// Check only a single letter
 		if (letter.length > 1) {
-			alert("Guess one letter at a time!")
+			alert("One letter at a time please!")
 		}
 		var er = letter.toUpperCase();
 
@@ -179,7 +175,7 @@ function HangmanGame(phraseLibrary) {
 			this.numIncorrectGuesses++;
 			this.incorrectLetters.push(letter);
 
-			// Set up a hangman dude. Incorrect guesses += 1
+			// Set up a hangman sequence.
 
 			$(".incorrect-letters").html(this.incorrectLetters.toString());
 			$(".num-incorrect").html(this.numIncorrectGuesses.toString());
@@ -189,72 +185,6 @@ function HangmanGame(phraseLibrary) {
 		}
 	}
 
-
-	this.arrayContains = function(array, element) {
-
-		// Check for a match in the array (or string). Conditional is not type specific!
-		for (let k = 0; k < array.length; k++) {
-
-			if (element == array[k]) {
-				return true;
-			}
-		}
-
-		// No matches, return false.
-		return false;
-	}
-
-	// this.matchWord = function(word) {
-
-	// 	var word = word.toUpperCase();
-	// 	// var splitPhrase = this.currentPhrase.split(" ");
-
-	// 	var matchedWord = false;
-	// 	$("#word-input").val("");
-
-	// 	if (this.currentPhrase.indexOf(word) !== -1) {
-
-	// 		var startingIndex = this.currentPhrase.indexOf(word)
-
-	// 		for (let k = startingIndex; k < word.length; k++) {
-	// 			this.solvedIndices.push(k)
-
-	// 		}
-
-	// 	}
-
-
-	// 	// for (let k = 0; k < splitPhrase.length; k++) {
-	// 	// 	console.log(word);
-	// 	// 	console.log(splitPhrase);
-	// 	// 	if (word == splitPhrase[k]) {
-
-	// 	// 		var startingIndex = this.currentPhrase.indexOf(word)
-
-	// 	// 		for (let k = startingIndex; k < word.length; k++) {
-	// 	// 			this.solvedIndices.push(k)
-
-	// 	// 		}
-	// 	// 	}
-	// 	// }
-
-	// 	if (matchedWord) {
-
-	// 		this.printPhrase(this.currentPhrase, this.solvedIndices);
-
-	// 	} else {
-
-	// 		this.numIncorrectGuesses++;
-
-	// 		this.incorrectWords.push(word);
-
-	// 		$(".num-incorrect").html(this.numIncorrectGuesses);
-	// 		$(".incorrect-words").html(this.incorrectWords);
-
-
-	// 	}
-
-	// }
 
 	this.matchPhrase = function(phrase) {
 
@@ -284,6 +214,20 @@ function HangmanGame(phraseLibrary) {
 
 	}
 
+	this.arrayContains = function(array, element) {
+
+		// Check for a match in the array (or string). Conditional is not type specific!
+		for (let k = 0; k < array.length; k++) {
+
+			if (element == array[k]) {
+				return true;
+			}
+		}
+
+		// No matches, return false.
+		return false;
+	}
+
 
 }
 
@@ -292,48 +236,36 @@ function HangmanGame(phraseLibrary) {
 // Instantiate the game 
 var hangman = new HangmanGame(phraseLibrary);
 
+
+// Function to initialize object/event listeners. Argument obj should be HangmanGame instance.
 function initializeListeners(obj) {
+
+	$(".incorrect-attempts").hide();
+
+	$(".load-phrase-button").on("click", function() {
+		obj.loadPhraseFromLibrary();
+		$(".incorrect-attempts").show();
+	});
 
 	$(".use-custom-phrase").on("click", function() {
 		var userInput = prompt("Enter the word or phrase to play.")
 		obj.printPhrase(userInput);
+		$(".incorrect-attempts").show();
 	});
 
+
+
 	$(".guess-letter-button").on("click", function() {
-
-		// if (obj.currentPhrase === "") {
-
-		// 	// Load a new phrase and run
-		// }
-		obj.searchLetter($("#letter-input").val());
+		obj.matchLetter($("#letter-input").val());
 	});
 
 	$("#guess-letter-form").submit(function() {
+		obj.matchLetter($("#letter-input").val());
 
-		// Same code as above... tried to write a function in HangmanGame constructor
-		// but it causes trouble using this.. not sure why.
-		// if (obj.currentPhrase === "") {
-
-		// 	// Load a new phrase and run
-		// }
-		obj.searchLetter($("#letter-input").val());
-
-		// Return false stops the page from reloading.
+		// Return false stops page from reloading on pressing enter in form.
 		return false;
 	});
 
-	// $(".guess-word-button").on("click", function() {
-
-	// 	obj.matchWord($("#word-input").val());
-	// });
-
-	// $("#guess-word-form").submit(function() {
-
-	// 	obj.matchWord($("#word-input").val());
-
-	// 	// Return false stops the page from reloading.
-	// 	return false;
-	// });
 
 	$(".guess-phrase-button").on("click", function() {
 		obj.matchPhrase($("#phrase-input").val());
@@ -341,12 +273,9 @@ function initializeListeners(obj) {
 
 	$("#guess-phrase-form").submit(function() {
 		obj.matchPhrase($("#phrase-input").val());
+		// Return false stops page from reloading on pressing enter in form.
 		return false;
 	});
-
-	$(".load-phrase-button").on("click", function() {
-		obj.loadPhraseFromLibrary();
-	})
 
 }
 
