@@ -1,14 +1,16 @@
 // To do:
 
-// Add congratulations and death messages
+// Make congratulations work when you guess the right letter
+ // - use printSpaces check to create array of space indices
+ // then make this.letterIndices
 
 // Add cookie being eaten or some image sequence with incorrect guesses
 
 // Make whole page presentable
 
-// Add to word/phrase library!
+// On loading new game cursor goes to guess a letter box?
 
-// Keep track of submitted letters and stop user from submitting the same letter?
+// Add to word/phrase library!
 
 var phraseLibrary = [
 	"Borborygmus",
@@ -18,6 +20,7 @@ var phraseLibrary = [
 	"acquiesce",
 ]
 
+
 function HangmanGame(phraseLibrary) {
 
 	// Take an argument in the form of an array containing strings for use in the game.
@@ -26,14 +29,16 @@ function HangmanGame(phraseLibrary) {
 		this.phraseLibrary = phraseLibrary;
 
 	} else {
+
 		this.phraseLibrary = [];
 	}
 
 	// Set current phrase.
 	this.currentPhrase = "";
+	this.letterIndices = [];
 
+	// Set game variables.
 	this.solvedIndices = [];
-
 	this.numIncorrectGuesses = 0;
 	this.incorrectLetters = [];
 	this.incorrectPhrases = [];
@@ -41,18 +46,13 @@ function HangmanGame(phraseLibrary) {
 	this.loadPhraseFromLibrary = function() {
 		var phraseLib = this.phraseLibrary;
 
-		// Stop method pulling out the same phrase as last time	
+		// Stop this method pulling out the same phrase as last time.	
 		do {
 			var randInt = Math.floor(Math.random() * phraseLib.length);
 			console.log(randInt);
 		}
 		while (phraseLib[randInt].toUpperCase() === this.currentPhrase) 
-
-		// It works!!!! I had forgotten .toUpperCase() ..... oh dear.
-		// The reason I went for do/while here as opposed to simply a while loop
-		// (both work) was so I wouldn't have to define randInt before the while loop
-		// and then again in the while loop. Using do saves a duplicate line of code, apparently,
-		// 'cause it does the thing at least once before checking the while loop?
+			
 
 		this.printPhrase(phraseLib[randInt]);		
 	}
@@ -61,14 +61,19 @@ function HangmanGame(phraseLibrary) {
 
 		// Check if this is a new string and reset game variables if it is.
 		if (string !== this.currentPhrase) {
+			this.letterIndices = [];
 			this.solvedIndices = [];
 			this.numIncorrectGuesses = 0;
 			this.incorrectLetters = [];
 			this.incorrectPhrases = [];
 
+			this.newPhrase = true;
+
 			$(".incorrect-letters").html("");
 			$(".incorrect-phrases").html("");
 			$(".num-incorrect").html(this.numIncorrectGuesses);
+		} else {
+			this.newPhrase = false;
 		}
 
 		// Check for only letters and spaces in the string.
@@ -105,6 +110,11 @@ function HangmanGame(phraseLibrary) {
 			// Check for solved characters and print their values.
 			} else {
 
+				// Logs letter indices to use in matchLetter to check for solved phrase.
+				if (this.newPhrase) {
+					this.letterIndices.push(k);					
+				}
+
 				if (hasArray) {
 
 					if (this.arrayContains(arrayIndicesToPrint, k)) {
@@ -134,10 +144,10 @@ function HangmanGame(phraseLibrary) {
 
 
 	this.matchLetter = function(letter) {
-		// Reset input field
+		// Reset input field.
 		$("#letter-input").val("");
 
-		// Check only a single letter
+		// Check only a single letter entered.
 		if (letter.length > 1) {
 			alert("One letter at a time please!");
 			return;
@@ -150,7 +160,7 @@ function HangmanGame(phraseLibrary) {
 			return;
 		}
 
-		// Also stop empty guesses.
+		// Stop empty guesses.
 		if (letter === "") {
 			return;
 		}
@@ -178,7 +188,16 @@ function HangmanGame(phraseLibrary) {
 		if (matchedLetter) {
 
 			// Check if all non-space indices are solved..
-
+			// var allLettersMatched = false;
+			var indicesNotMatched = [];
+			for (let k = 0; k < this.letterIndices.length; k++) {
+				if (this.solvedIndices.indexOf(this.solvedIndices[k]) === -1) {
+					indicesNotMatched.push(k)
+				}
+			}
+			if (indicesNotMatched.length === 0) {
+				this.congratulations();	
+			}
 
 			// Call printPhrase with new list of solved indices.
 			console.log(this.solvedIndices);
@@ -197,8 +216,6 @@ function HangmanGame(phraseLibrary) {
 			if (this.numIncorrectGuesses >= 9) {
 				this.gameOver();
 			}
-
-			return "Not a match!"
 
 		}
 	}
@@ -285,7 +302,6 @@ function initializeListeners(obj) {
 		$("h1").html("Hangman");
 		$(".incorrect-attempts").show();
 	});
-
 
 
 	$(".guess-letter-button").on("click", function() {
