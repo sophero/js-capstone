@@ -1,16 +1,11 @@
 // To do:
 
-// Make congratulations work when you guess the right letter
- // - use printSpaces check to create array of space indices
- // then make this.letterIndices
-
-// Add cookie being eaten or some image sequence with incorrect guesses
+// Add hangman sequence! Use online image editor
 
 // Make whole page presentable
 
-// On loading new game cursor goes to guess a letter box?
-
-// Add to word/phrase library!
+// On loading new game cursor goes to guess a letter box.
+	// Make this thing work: $("#guess-letter-form").focus();
 
 var phraseLibrary = [
 	"Borborygmus",
@@ -20,6 +15,15 @@ var phraseLibrary = [
 	"acquiesce",
 ]
 
+
+
+// make variable boolean this.isGameOver
+// initiates as false
+// switches to false when you start a new game 
+// switches to true when gameOver or congratulations ar called.
+// add if to check before all your event listeners. 
+
+// Easy!!!!
 
 function HangmanGame(phraseLibrary) {
 
@@ -42,6 +46,7 @@ function HangmanGame(phraseLibrary) {
 	this.numIncorrectGuesses = 0;
 	this.incorrectLetters = [];
 	this.incorrectPhrases = [];
+	this.isGameOver = false;
 
 	this.loadPhraseFromLibrary = function() {
 		var phraseLib = this.phraseLibrary;
@@ -57,7 +62,7 @@ function HangmanGame(phraseLibrary) {
 		this.printPhrase(phraseLib[randInt]);		
 	}
 
-	this.printPhrase = function(string, arrayIndicesToPrint) {
+	this.printPhrase = function(string) {
 
 		// Check if this is a new string and reset game variables if it is.
 		if (string !== this.currentPhrase) {
@@ -68,12 +73,18 @@ function HangmanGame(phraseLibrary) {
 			this.incorrectPhrases = [];
 
 			this.newPhrase = true;
+			this.isGameOver = false;
 
+			$("#letter-input").val("");
+			$("#phrase-input").val("");
 			$(".incorrect-letters").html("");
 			$(".incorrect-phrases").html("");
 			$(".num-incorrect").html(this.numIncorrectGuesses);
+
 		} else {
+
 			this.newPhrase = false;
+
 		}
 
 		// Check for only letters and spaces in the string.
@@ -81,56 +92,35 @@ function HangmanGame(phraseLibrary) {
 
 		if (!letters.test(string)) {
 			alert("Phrase contains invalid characters - letters and spaces only please.");
-			return
+			return;
 		}
-
-		// Check for array of indices to print.
-		// Very important NOTE!!! typeof ["I", "am", "an", "array!"]
-		// returns "object" because arrays are a type of JS object... <_<
-		if (typeof arrayIndicesToPrint === "object") {
-			var hasArray = true;
-		} else {
-			var hasArray = false;
-		}
-
 
 		// Reset phrase container on page.
 		$(".phrase-container").html("");
 
-		// Again, no need to split into an array. String should work just fine.
-		// Iterate through each character, printing either a space, letter, or underscore to page.
+		// Iterate through each character, print either a space, letter, or underscore.
 		for (let k = 0; k < string.length; k++) {
 
-			// Print line break for space in phrase.
+			// Print line break for a space.
 			if (string[k] === " ") {
-
 				$(".phrase-container").append("<br>");
-
 
 			// Check for solved characters and print their values.
 			} else {
 
-				// Logs letter indices to use in matchLetter to check for solved phrase.
+				// Logs which indices in the string of a new phrase are letters.
 				if (this.newPhrase) {
 					this.letterIndices.push(k);					
 				}
 
-				if (hasArray) {
-
-					if (this.arrayContains(arrayIndicesToPrint, k)) {
-
-						$(".phrase-container").append(string[k] + " ");
-
-					} else {
-
-						// Print underscore for unknown letter.
-						$(".phrase-container").append("_ ");					
-					}
+				if (this.arrayContains(this.solvedIndices, k)) {
+					// Print solved-for letter.
+					$(".phrase-container").append(string[k] + " ");
 
 				} else {
 
 					// Print underscore for unknown letter.
-					$(".phrase-container").append("_ ");
+					$(".phrase-container").append("_ ");					
 
 				}
 			}
@@ -144,6 +134,7 @@ function HangmanGame(phraseLibrary) {
 
 
 	this.matchLetter = function(letter) {
+
 		// Reset input field.
 		$("#letter-input").val("");
 
@@ -165,12 +156,16 @@ function HangmanGame(phraseLibrary) {
 			return;
 		}
 
+		// Put the cursor in the letter guess box.
+		$("input[name=letter-input]").focus();
+		console.log("hey");
+
 		var er = letter.toUpperCase();
 
 		// There's really no need to split the phrase into an array...same methods exist on strings.
 		var curPhrase = this.currentPhrase;
 		
-		// Boolean for finding matching letter.
+		// Create Boolean - have matched a letter yet?
 		var matchedLetter = false;
 
 		// Check for any matches to the guessed letter in the phrase
@@ -185,10 +180,10 @@ function HangmanGame(phraseLibrary) {
 			}
 		} 
 
+		// Matched a letter,
 		if (matchedLetter) {
 
 			// Check if all non-space indices are solved..
-			// var allLettersMatched = false;
 			var indicesNotMatched = [];
 			for (let k = 0; k < this.letterIndices.length; k++) {
 				if (this.solvedIndices.indexOf(this.solvedIndices[k]) === -1) {
@@ -199,10 +194,13 @@ function HangmanGame(phraseLibrary) {
 				this.congratulations();	
 			}
 
-			// Call printPhrase with new list of solved indices.
+			// Call printPhrase.
 			console.log(this.solvedIndices);
-			this.printPhrase(this.currentPhrase, this.solvedIndices);
 
+			this.printPhrase(this.currentPhrase);
+
+
+		// No match,
 		} else {
 
 			this.numIncorrectGuesses++;
@@ -231,11 +229,11 @@ function HangmanGame(phraseLibrary) {
 			// Congratulations!!
 			this.congratulations();
 
-			// Unoptimized way to display entire phrase.
+			// Display entire phrase.
 			for (let k = 0; k < this.currentPhrase.length; k++) {
 				this.solvedIndices.push(k);
 			}
-			this.printPhrase(this.currentPhrase, this.solvedIndices);
+			this.printPhrase(this.currentPhrase);
 
 
 		} else {
@@ -264,15 +262,17 @@ function HangmanGame(phraseLibrary) {
 			}
 		}
 
-		// No matches, return false.
+		// Make it through the for loop without a match; return false.
 		return false;
 	}
 
 	this.gameOver = function() {
+		this.isGameOver = true;
 		$("h1").html("Game over.");
 	}
 
 	this.congratulations = function() {
+		this.isGameOver = true;
 		$("h1").html("Congratulations!");		
 	}
 
@@ -288,6 +288,7 @@ var hangman = new HangmanGame(phraseLibrary);
 // Function to initialize object/event listeners. Argument obj should be HangmanGame instance.
 function initializeListeners(obj) {
 
+	// Hide incorrect attempts on first page load.
 	$(".incorrect-attempts").hide();
 
 	$(".load-phrase-button").on("click", function() {
@@ -304,23 +305,36 @@ function initializeListeners(obj) {
 	});
 
 
+	// Guess letter button and form submit
 	$(".guess-letter-button").on("click", function() {
+		if (obj.isGameOver) {
+			return;
+		}
 		obj.matchLetter($("#letter-input").val());
 	});
 
 	$("#guess-letter-form").submit(function() {
+		if (obj.isGameOver) {
+			return false;
+		}
 		obj.matchLetter($("#letter-input").val());
-
 		// Return false stops page from reloading on pressing enter in form.
 		return false;
 	});
 
 
+	// Guess phrase button and form submit
 	$(".guess-phrase-button").on("click", function() {
+		if (obj.isGameOver) {
+			return;
+		}
 		obj.matchPhrase($("#phrase-input").val());
-	})
+	});
 
 	$("#guess-phrase-form").submit(function() {
+		if (obj.isGameOver) {
+			return false;
+		}
 		obj.matchPhrase($("#phrase-input").val());
 		// Return false stops page from reloading on pressing enter in form.
 		return false;
