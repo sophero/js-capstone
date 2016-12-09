@@ -36,7 +36,12 @@ img {
 .guessing-forms {
 	text-align: center;
 	padding: 5px;
+	
+	form  {
+		margin: 5px;
+	}
 }
+
 
 .incorrect-attempts {
 	text-align: center;

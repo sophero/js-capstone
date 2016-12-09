@@ -28,6 +28,8 @@ img {
 .guessing-forms {
   text-align: center;
   padding: 5px; }
+  .guessing-forms form {
+    margin: 5px; }
 
 .incorrect-attempts {
   text-align: center; }
