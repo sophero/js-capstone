@@ -7,6 +7,13 @@
 // On loading new game cursor goes to guess a letter box.
 	// Make this thing work: $("#guess-letter-form").focus();
 
+$(document).ready(function() {
+	// Instantiate the game 
+	var hangman = new HangmanGame(phraseLibrary);
+	initializeListeners(hangman);
+});
+
+
 var phraseLibrary = [
 	"Borborygmus",
 	"system of a down",
@@ -14,16 +21,6 @@ var phraseLibrary = [
 	"rhythm",
 	"acquiesce",
 ]
-
-
-
-// make variable boolean this.isGameOver
-// initiates as false
-// switches to false when you start a new game 
-// switches to true when gameOver or congratulations ar called.
-// add if to check before all your event listeners. 
-
-// Easy!!!!
 
 function HangmanGame(phraseLibrary) {
 
@@ -183,25 +180,26 @@ function HangmanGame(phraseLibrary) {
 		// Matched a letter,
 		if (matchedLetter) {
 
-			// Check if all non-space indices are solved..
+			// Call printPhrase.
+			this.printPhrase(this.currentPhrase);
+			console.log(this.solvedIndices);
+
+			// Check if there are any remaining non-space indices to be solved.
 			var indicesNotMatched = [];
 			for (let k = 0; k < this.letterIndices.length; k++) {
+
 				if (this.solvedIndices.indexOf(this.solvedIndices[k]) === -1) {
 					indicesNotMatched.push(k)
 				}
 			}
+
 			if (indicesNotMatched.length === 0) {
 				this.congratulations();	
+
 			}
-
-			// Call printPhrase.
-			console.log(this.solvedIndices);
-
-			this.printPhrase(this.currentPhrase);
-
-
-		// No match,
+			
 		} else {
+		// no matching letter found,
 
 			this.numIncorrectGuesses++;
 			this.incorrectLetters.push(letter.toUpperCase());
@@ -281,10 +279,6 @@ function HangmanGame(phraseLibrary) {
 
 
 
-// Instantiate the game 
-var hangman = new HangmanGame(phraseLibrary);
-
-
 // Function to initialize object/event listeners. Argument obj should be HangmanGame instance.
 function initializeListeners(obj) {
 
@@ -342,6 +336,5 @@ function initializeListeners(obj) {
 
 }
 
-initializeListeners(hangman);
 
 
