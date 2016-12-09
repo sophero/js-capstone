@@ -1,12 +1,3 @@
-// To do:
-
-// Add hangman sequence! 
-
-// Make page presentable
-
-// On loading new game cursor goes to guess a letter box.
-	// Make this thing work: $("#guess-letter-form").focus();
-
 $(document).ready(function() {
 
 	var hangman = new HangmanGame(phraseLibrary);
@@ -156,7 +147,6 @@ function HangmanGame(phraseLibrary) {
 
 		// Put the cursor in the letter guess box.
 		$("input[name=letter-input]").focus();
-		console.log("hey");
 
 		var er = letter.toUpperCase();
 
