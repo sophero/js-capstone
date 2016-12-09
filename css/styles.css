@@ -2,8 +2,9 @@ body {
   font-family: Verdana; }
 
 h1 {
+  text-align: center;
   font-family: Georgia;
-  text-align: center; }
+  font-size: 2.6em; }
 
 img {
   display: inline-block;
@@ -13,8 +14,31 @@ img {
   margin-bottom: 20px;
   text-align: center; }
 
+.wrapper {
+  margin: 0 auto;
+  width: 90vw; }
+
 .phrase-container {
-  font-size: 4em;
-  margin-bottom: 20px; }
+  width: 75%;
+  padding: 5px;
+  font-size: 3.6em;
+  text-align: center;
+  margin: 20px auto; }
+
+.guessing-forms {
+  text-align: center;
+  padding: 5px; }
+
+.incorrect-attempts {
+  text-align: center; }
+  .incorrect-attempts span {
+    font-weight: bold; }
+
+.how-to-play {
+  width: 70%;
+  padding: 5px;
+  margin: 0 auto; }
+  .how-to-play h4 {
+    text-decoration: underline; }
 
 /*# sourceMappingURL=styles.css.map */

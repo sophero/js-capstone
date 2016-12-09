@@ -5,8 +5,9 @@ body {
 }
 
 h1 {
-	font-family: Georgia;
 	text-align: center;
+	font-family: Georgia;
+	font-size: 2.6em;
 }
 
 img {
@@ -19,8 +20,38 @@ img {
 	text-align: center;
 }
 
-.phrase-container {
-	font-size: 4em;
-	margin-bottom: 20px;
+.wrapper {
+	margin: 0 auto;
+	width: 90vw;
 }
 
+.phrase-container {
+	width: 75%;
+	padding: 5px;
+	font-size: 3.6em;
+	text-align: center;
+	margin: 20px auto;
+}
+
+.guessing-forms {
+	text-align: center;
+	padding: 5px;
+}
+
+.incorrect-attempts {
+	text-align: center;
+	
+	span {
+		font-weight: bold;
+	}
+}
+
+.how-to-play {
+	width: 70%;
+	padding: 5px;
+	margin: 0 auto;
+
+	h4 {
+		text-decoration: underline;
+	}
+}

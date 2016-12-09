@@ -1,16 +1,17 @@
 // To do:
 
-// Add hangman sequence! Use online image editor
+// Add hangman sequence! 
 
-// Make whole page presentable
+// Make page presentable
 
 // On loading new game cursor goes to guess a letter box.
 	// Make this thing work: $("#guess-letter-form").focus();
 
 $(document).ready(function() {
-	// Instantiate the game 
+
 	var hangman = new HangmanGame(phraseLibrary);
 	initializeListeners(hangman);
+
 });
 
 
@@ -278,19 +279,21 @@ function HangmanGame(phraseLibrary) {
 }
 
 
-
-// Function to initialize object/event listeners. Argument obj should be HangmanGame instance.
+// Function to initialize event listeners.
+// Input argument should be the HangmanGame instance.
 function initializeListeners(obj) {
 
 	// Hide incorrect attempts on first page load.
 	$(".incorrect-attempts").hide();
 
+	// Load new phrase from library
 	$(".load-phrase-button").on("click", function() {
 		obj.loadPhraseFromLibrary();
 		$("h1").html("Hangman");
 		$(".incorrect-attempts").show();
 	});
 
+	// Use custom phrase
 	$(".use-custom-phrase").on("click", function() {
 		var userInput = prompt("Enter the word or phrase to play.")
 		obj.printPhrase(userInput);
@@ -299,7 +302,7 @@ function initializeListeners(obj) {
 	});
 
 
-	// Guess letter button and form submit
+	// Guess letter button.
 	$(".guess-letter-button").on("click", function() {
 		if (obj.isGameOver) {
 			return;
@@ -307,17 +310,19 @@ function initializeListeners(obj) {
 		obj.matchLetter($("#letter-input").val());
 	});
 
+	// Guess word form: Hitting enter
 	$("#guess-letter-form").submit(function() {
 		if (obj.isGameOver) {
 			return false;
 		}
 		obj.matchLetter($("#letter-input").val());
-		// Return false stops page from reloading on pressing enter in form.
+
+		// Return false prevents the page from reloading.
 		return false;
 	});
 
 
-	// Guess phrase button and form submit
+	// Guess phrase button.
 	$(".guess-phrase-button").on("click", function() {
 		if (obj.isGameOver) {
 			return;
@@ -325,12 +330,14 @@ function initializeListeners(obj) {
 		obj.matchPhrase($("#phrase-input").val());
 	});
 
+	// Guess phrase form: Hitting enter 
 	$("#guess-phrase-form").submit(function() {
 		if (obj.isGameOver) {
 			return false;
 		}
 		obj.matchPhrase($("#phrase-input").val());
-		// Return false stops page from reloading on pressing enter in form.
+
+		// Return false prevents the page from reloading.
 		return false;
 	});
 
